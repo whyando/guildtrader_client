@@ -14,24 +14,6 @@ use serde::{Deserialize, Serialize};
 use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
-/// struct for passing parameters to the method [`cancel`]
-#[derive(Clone, Debug)]
-pub struct CancelParams {
-    pub cancel_request: models::CancelRequest
-}
-
-/// struct for passing parameters to the method [`collect`]
-#[derive(Clone, Debug)]
-pub struct CollectParams {
-    pub cancel_request: models::CancelRequest
-}
-
-/// struct for passing parameters to the method [`contract`]
-#[derive(Clone, Debug)]
-pub struct ContractParams {
-    pub contract_request: models::ContractRequest
-}
-
 
 /// struct for typed errors of method [`cancel`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -77,12 +59,8 @@ pub enum ListError {
 }
 
 
-pub async fn cancel(configuration: &configuration::Configuration, params: CancelParams) -> Result<models::Cancel200Response, Error<CancelError>> {
+pub async fn cancel(configuration: &configuration::Configuration, cancel_request: models::CancelRequest) -> Result<models::Cancel200Response, Error<CancelError>> {
     let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let cancel_request = params.cancel_request;
-
 
     let local_var_client = &local_var_configuration.client;
 
@@ -112,12 +90,8 @@ pub async fn cancel(configuration: &configuration::Configuration, params: Cancel
     }
 }
 
-pub async fn collect(configuration: &configuration::Configuration, params: CollectParams) -> Result<models::Cancel200Response, Error<CollectError>> {
+pub async fn collect(configuration: &configuration::Configuration, cancel_request: models::CancelRequest) -> Result<models::Cancel200Response, Error<CollectError>> {
     let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let cancel_request = params.cancel_request;
-
 
     let local_var_client = &local_var_configuration.client;
 
@@ -147,12 +121,8 @@ pub async fn collect(configuration: &configuration::Configuration, params: Colle
     }
 }
 
-pub async fn contract(configuration: &configuration::Configuration, params: ContractParams) -> Result<models::Contract, Error<ContractError>> {
+pub async fn contract(configuration: &configuration::Configuration, contract_request: models::ContractRequest) -> Result<models::Contract, Error<ContractError>> {
     let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let contract_request = params.contract_request;
-
 
     let local_var_client = &local_var_configuration.client;
 
@@ -182,11 +152,8 @@ pub async fn contract(configuration: &configuration::Configuration, params: Cont
     }
 }
 
-pub async fn contracts(configuration: &configuration::Configuration) -> Result<models::Contracts200Response, Error<ContractsError>> {
+pub async fn contracts(configuration: &configuration::Configuration, ) -> Result<models::Contracts200Response, Error<ContractsError>> {
     let local_var_configuration = configuration;
-
-    // unbox the parameters
-
 
     let local_var_client = &local_var_configuration.client;
 
@@ -215,11 +182,8 @@ pub async fn contracts(configuration: &configuration::Configuration) -> Result<m
     }
 }
 
-pub async fn list(configuration: &configuration::Configuration) -> Result<models::List200Response, Error<ListError>> {
+pub async fn list(configuration: &configuration::Configuration, ) -> Result<models::List200Response, Error<ListError>> {
     let local_var_configuration = configuration;
-
-    // unbox the parameters
-
 
     let local_var_client = &local_var_configuration.client;
 

@@ -14,18 +14,6 @@ use serde::{Deserialize, Serialize};
 use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
-/// struct for passing parameters to the method [`buy`]
-#[derive(Clone, Debug)]
-pub struct BuyParams {
-    pub buy_request: models::BuyRequest
-}
-
-/// struct for passing parameters to the method [`sell`]
-#[derive(Clone, Debug)]
-pub struct SellParams {
-    pub buy_request: models::BuyRequest
-}
-
 
 /// struct for typed errors of method [`assets`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -54,11 +42,8 @@ pub enum SellError {
 }
 
 
-pub async fn assets(configuration: &configuration::Configuration) -> Result<models::Assets200Response, Error<AssetsError>> {
+pub async fn assets(configuration: &configuration::Configuration, ) -> Result<models::Assets200Response, Error<AssetsError>> {
     let local_var_configuration = configuration;
-
-    // unbox the parameters
-
 
     let local_var_client = &local_var_configuration.client;
 
@@ -87,12 +72,8 @@ pub async fn assets(configuration: &configuration::Configuration) -> Result<mode
     }
 }
 
-pub async fn buy(configuration: &configuration::Configuration, params: BuyParams) -> Result<models::Buy200Response, Error<BuyError>> {
+pub async fn buy(configuration: &configuration::Configuration, buy_request: models::BuyRequest) -> Result<models::Buy200Response, Error<BuyError>> {
     let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let buy_request = params.buy_request;
-
 
     let local_var_client = &local_var_configuration.client;
 
@@ -122,12 +103,8 @@ pub async fn buy(configuration: &configuration::Configuration, params: BuyParams
     }
 }
 
-pub async fn sell(configuration: &configuration::Configuration, params: SellParams) -> Result<models::Buy200Response, Error<SellError>> {
+pub async fn sell(configuration: &configuration::Configuration, buy_request: models::BuyRequest) -> Result<models::Buy200Response, Error<SellError>> {
     let local_var_configuration = configuration;
-
-    // unbox the parameters
-    let buy_request = params.buy_request;
-
 
     let local_var_client = &local_var_configuration.client;
 

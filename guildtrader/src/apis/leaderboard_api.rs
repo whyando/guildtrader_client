@@ -23,11 +23,8 @@ pub enum LeaderboardError {
 }
 
 
-pub async fn leaderboard(configuration: &configuration::Configuration) -> Result<Vec<models::Leaderboard200ResponseInner>, Error<LeaderboardError>> {
+pub async fn leaderboard(configuration: &configuration::Configuration, ) -> Result<Vec<models::Leaderboard200ResponseInner>, Error<LeaderboardError>> {
     let local_var_configuration = configuration;
-
-    // unbox the parameters
-
 
     let local_var_client = &local_var_configuration.client;
 
