@@ -47,14 +47,14 @@ fn get_price(market: &Assets200Response, item: &str) -> i64 {
 }
 
 async fn guild_loop(c: &Configuration) {
+    let mut contracts = guild_api::contracts(&c)
+        .await
+        .expect("unable to get contracts");
     loop {
         // Fetch up to date data
         let user = user_api::profile(&c).await.expect("unable to get user");
         let market = trade_api::assets(&c).await.expect("unable to get market");
         let guilds = guild_api::list(&c).await.expect("unable to get guild");
-        let mut contracts = guild_api::contracts(&c)
-            .await
-            .expect("unable to get contracts");
         //println!("User {:?}", user);
         //println!("Guilds {:?}", guilds);
         //println!("Contracts {:?}", contracts);
@@ -72,8 +72,12 @@ async fn guild_loop(c: &Configuration) {
                         .await
                         .expect("unable to complete contract");
                     println!(
-                        "Completed contract: {} {}x {} with rewards: {:?}",
-                        contract.guild, contract.quantity, contract.item, complete_result.rewards
+                        "Completed T{} {} contract {}x {}: {:?}",
+                        contract.tier,
+                        contract.guild,
+                        contract.quantity,
+                        contract.item,
+                        complete_result.rewards
                     );
                     completed.push(guild.id.clone());
                 }
