@@ -138,7 +138,8 @@ async fn guild_loop(c: &Configuration) {
             .min()
             .unwrap_or(Utc::now() + Duration::seconds(60));
         let sleep_duration = next_completion - Utc::now() + DELAY;
-        sleep(sleep_duration.to_std().unwrap()).await;
+        let sleep_duration = sleep_duration.to_std().unwrap_or_default();
+        sleep(sleep_duration).await;
     }
 }
 
