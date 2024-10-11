@@ -55,23 +55,26 @@ async fn guild_loop(c: &Configuration) {
         let mut contracts = guild_api::contracts(&c)
             .await
             .expect("unable to get contracts");
-        println!("User {:?}", user);
-        println!("Guilds {:?}", guilds);
-        println!("Contracts {:?}", contracts);
+        //println!("User {:?}", user);
+        //println!("Guilds {:?}", guilds);
+        //println!("Contracts {:?}", contracts);
 
         // For each guild, complete contract if possible
         let mut completed: Vec<String> = Vec::new();
         for guild in &guilds.data {
             let contract = contracts.data.iter().find(|&c| c.guild == guild.id);
             if let Some(contract) = contract {
-                println!("Guild {} has active contract {:?}", guild.id, contract);
+                // println!("Guild {} has active contract {:?}", guild.id, contract);
                 let completion: DateTime<Utc> = contract.completes_at.parse().unwrap();
                 if completion + DELAY <= Utc::now() {
                     let req = CancelRequest::new(guild.id.clone());
                     let complete_result = guild_api::collect(&c, req)
                         .await
                         .expect("unable to complete contract");
-                    println!("Completed contract {:?}", complete_result);
+                    println!(
+                        "Completed contract: {} {}x {} with rewards: {:?}",
+                        contract.guild, contract.quantity, contract.item, complete_result.rewards
+                    );
                     completed.push(guild.id.clone());
                 }
             }
@@ -81,12 +84,14 @@ async fn guild_loop(c: &Configuration) {
         }
 
         // Sell full inventory
+        let mut gold = user.gold;
         for (item, quantity) in user.inventory {
             let req = BuyRequest::new(item.clone(), quantity);
             let sell_result = trade_api::sell(&c, req).await.expect("unable to sell");
             let trade = sell_result.trade;
+            gold = sell_result.gold;
             println!(
-                "Sold {}x {} for {}",
+                "Sold {}x {} for {}g",
                 trade.quantity, trade.item, trade.price
             );
         }
@@ -103,7 +108,7 @@ async fn guild_loop(c: &Configuration) {
                 .iter()
                 .filter_map(|req| {
                     let price = get_price(&market, &req.item);
-                    if user.gold / 10 >= price {
+                    if gold / 10 >= price {
                         Some(req)
                     } else {
                         None
@@ -117,7 +122,7 @@ async fn guild_loop(c: &Configuration) {
                 let req = ContractRequest::new(guild.id.clone(), best.item.clone(), 1);
                 let contract = guild_api::contract(&c, req)
                     .await
-                    .expect("unable to contract");
+                    .expect("unable to start contract");
                 contracts.data.push(contract);
             }
         }
@@ -143,7 +148,7 @@ async fn scavenge_loop(c: &Configuration) {
         let scavenge = scavenge_api::scavenge(&c)
             .await
             .expect("unable to scavenge");
-        println!("Scavenged {:?}", scavenge);
+        // println!("Scavenged {:?}", scavenge);
 
         // Sleep
         let cooldown: DateTime<Utc> = scavenge.cooldown.parse().expect("unable to parse cooldown");
