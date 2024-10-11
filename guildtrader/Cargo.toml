@@ -1,5 +1,5 @@
 [package]
-name = "openapi"
+name = "guildtrader"
 version = "0.0.3"
 authors = ["OpenAPI Generator team and contributors"]
 description = "Guildtrader API"

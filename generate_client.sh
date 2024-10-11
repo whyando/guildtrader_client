@@ -6,5 +6,7 @@ if [ ! -f "generate_client.sh" ]; then
 fi
 
 rm -rf guildtrader
-openapi-generator-cli generate -i "https://guildtrader.whyando.com/openapi.json" -g rust -o guildtrader | tee openapi-generator.log
-
+openapi-generator-cli generate -i "https://guildtrader.whyando.com/openapi.json" -g rust -o guildtrader \
+    --additional-properties packageName=guildtrader,projectName=guildtrader,projectVersion=0.1.0,licenseName=MIT,useSingleRequestParameter=true \
+    --skip-validate-spec 2>&1 \
+    | tee openapi-generator.log

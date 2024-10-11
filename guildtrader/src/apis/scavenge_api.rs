@@ -25,8 +25,11 @@ pub enum ScavengeError {
 }
 
 
-pub async fn scavenge(configuration: &configuration::Configuration, ) -> Result<models::Scavenge200Response, Error<ScavengeError>> {
+pub async fn scavenge(configuration: &configuration::Configuration) -> Result<models::Scavenge200Response, Error<ScavengeError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+
 
     let local_var_client = &local_var_configuration.client;
 

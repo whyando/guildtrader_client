@@ -14,6 +14,12 @@ use serde::{Deserialize, Serialize};
 use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
+/// struct for passing parameters to the method [`register`]
+#[derive(Clone, Debug)]
+pub struct RegisterParams {
+    pub register_request: models::RegisterRequest
+}
+
 
 /// struct for typed errors of method [`profile`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -34,8 +40,11 @@ pub enum RegisterError {
 }
 
 
-pub async fn profile(configuration: &configuration::Configuration, ) -> Result<models::User, Error<ProfileError>> {
+pub async fn profile(configuration: &configuration::Configuration) -> Result<models::User, Error<ProfileError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -64,8 +73,12 @@ pub async fn profile(configuration: &configuration::Configuration, ) -> Result<m
     }
 }
 
-pub async fn register(configuration: &configuration::Configuration, register_request: models::RegisterRequest) -> Result<models::Register201Response, Error<RegisterError>> {
+pub async fn register(configuration: &configuration::Configuration, params: RegisterParams) -> Result<models::Register201Response, Error<RegisterError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let register_request = params.register_request;
+
 
     let local_var_client = &local_var_configuration.client;
 
