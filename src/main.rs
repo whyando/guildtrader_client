@@ -37,12 +37,14 @@ async fn main() {
     tokio::join!(scavenge_loop(&c), guild_loop(&c));
 }
 
-fn get_price(market: &Assets200Response, item: &str) -> i64 {
+fn get_market_entry<'a>(
+    market: &'a Assets200Response,
+    item: &str,
+) -> &'a Assets200ResponseTradesInner {
     market
         .trades
         .iter()
         .find(|&i| i.name == item)
-        .map(|item| item.price)
         .expect("unable to find item price")
 }
 
@@ -90,6 +92,11 @@ async fn guild_loop(c: &Configuration) {
         // Sell full inventory
         let mut gold = user.gold;
         for (item, quantity) in user.inventory {
+            let market_entry = get_market_entry(&market, &item);
+            if market_entry.price_status == "low" {
+                continue;
+            }
+
             let req = BuyRequest::new(item.clone(), quantity);
             let sell_result = trade_api::sell(&c, req).await.expect("unable to sell");
             let trade = sell_result.trade;
@@ -111,8 +118,8 @@ async fn guild_loop(c: &Configuration) {
                 .request_items
                 .iter()
                 .filter_map(|req| {
-                    let price = get_price(&market, &req.item);
-                    if gold / 10 >= price {
+                    let market_entry = get_market_entry(&market, &req.item);
+                    if gold / 10 >= market_entry.price {
                         Some(req)
                     } else {
                         None
